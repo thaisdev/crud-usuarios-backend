@@ -27,7 +27,7 @@ namespace CrudUsuarios
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserContext>(opt =>
+            services.AddDbContext<CrudUserContext>(opt =>
                opt.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddControllers();
         }

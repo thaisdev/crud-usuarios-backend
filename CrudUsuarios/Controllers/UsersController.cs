@@ -14,9 +14,9 @@ namespace CrudUsuarios.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserContext _context;
+        private readonly CrudUserContext _context;
 
-        public UsersController(UserContext context)
+        public UsersController(CrudUserContext context)
         {
             _context = context;
         }

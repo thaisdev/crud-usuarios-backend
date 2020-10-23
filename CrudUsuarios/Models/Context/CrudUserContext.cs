@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CrudUsuarios.Context
 {
-    public class UserContext : DbContext
+    public class CrudUserContext : DbContext
     {
-        public UserContext(DbContextOptions<UserContext> options) : base(options)
+        public CrudUserContext(DbContextOptions<CrudUserContext> options) : base(options)
         {   
 
         }
