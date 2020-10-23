@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrudUsuarios.Context;
 using CrudUsuarios.Models;
+using CrudUsuarios.Services;
+using System.Net;
+using CrudUsuarios.Services.Interfaces;
 
 namespace CrudUsuarios.Controllers
 {
@@ -15,96 +18,93 @@ namespace CrudUsuarios.Controllers
     public class UsersController : ControllerBase
     {
         private readonly CrudUserContext _context;
+        private readonly IUserService _service;
 
-        public UsersController(CrudUserContext context)
+        public UsersController(CrudUserContext context, IUserService service)
         {
             _context = context;
+            _service = service;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser()
+        public async Task<ActionResult<IEnumerable<User>>> GetAll()
         {
-            return await _context.User.ToListAsync();
+            try
+            {
+               var resp = _service.FindAll();
+               return Ok(new  { data = resp });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { errorMessage = ex.Message });
+            }
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
-
-            if (user == null)
+            try
             {
-                return NotFound();
+                var user = _service.FindById(id);
+                if (user != null)
+                {
+                    return Ok(user);
+                } else
+                {
+                    return NotFound(new { errorMessage = "Nenhum usuário encontrado" });
+                }
             }
-
-            return user;
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { errorMessage = ex.Message });
+            }
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var resp = _service.Update(user, id);
+                return Ok(resp);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { errorMessage = ex.Message });
             }
-
-            return NoContent();
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            try
+            {
+                var resp = _service.Create(user);
+                return StatusCode((int)HttpStatusCode.Created, resp);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { errorMessage = ex.Message });
+            }
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            try
             {
-                return NotFound();
+                var resp = _service.Delete(id);
+                return Ok(new { message = "Usuário deletado com sucesso" });
             }
-
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return user;
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.Id == id);
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { errorMessage = ex.Message });
+            }
         }
     }
 }

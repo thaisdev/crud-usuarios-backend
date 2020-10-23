@@ -19,27 +19,72 @@ namespace CrudUsuarios.Services
 
         public User Create(User user)
         {
-            throw new NotImplementedException();
+            _context.User.Add(user);
+            var resp = _context.SaveChanges();
+            if (resp == 1)
+            {
+                return user;
+            }
+            else
+            {
+                throw new Exception("Ocorreu um erro desconhecido ao salvar o usuário");
+            }
         }
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var foundedUser = _context.User.Where(user => user.Id == id).FirstOrDefault();
+            if (foundedUser != null)
+            {
+                _context.User.Remove(foundedUser);
+                var resp = _context.SaveChanges();
+                if (resp == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Ocorreu um erro desconhecido ao deletar o usuário");
+                }
+            }
+            else
+            {
+                throw new Exception("Usuário não encontrado");
+            }
         }
 
         public List<User> FindAll()
         {
-            throw new NotImplementedException();
+            return _context.User.ToList();
         }
 
         public User FindById(int id)
         {
-            throw new NotImplementedException();
+            return _context.User.Where(user => user.Id == id).FirstOrDefault();
         }
 
-        public User Update(User user)
+        public User Update(User user, int id)
         {
-            throw new NotImplementedException();
+            var foundedUser = _context.User.Where(user => user.Id == id).FirstOrDefault();
+            if (foundedUser != null)
+            {
+                foundedUser.Name = user.Name;
+                foundedUser.LastName = user.LastName;
+                foundedUser.Birthday = user.Birthday;
+                foundedUser.Escolaridade = user.Escolaridade;
+                var resp = _context.SaveChanges();
+                if (resp == 1)
+                {
+                    return user;
+                }
+                else
+                {
+                    throw new Exception("Ocorreu um erro desconhecido ao alterar o usuário");
+                }
+            } else
+            {
+                throw new Exception("Usuário não encontrado");
+            }
         }
     }
 }

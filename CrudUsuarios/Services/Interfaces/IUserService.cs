@@ -11,7 +11,7 @@ namespace CrudUsuarios.Services.Interfaces
         User Create(User user);
         User FindById(int id);
         List<User> FindAll();
-        User Update(User user);
+        User Update(User user, int id);
         bool Delete(int id);
     }
 }

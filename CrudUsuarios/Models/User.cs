@@ -12,6 +12,6 @@ namespace CrudUsuarios.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public DateTime Birthday { get; set; }
-        public EscolaridadeEnum escolaridade { get; set; }
+        public EscolaridadeEnum Escolaridade { get; set; }
     }
 }
