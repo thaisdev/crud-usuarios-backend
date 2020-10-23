@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CrudUsuarios.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-namespace User.Context
+
+namespace CrudUsuarios.Context
 {
     public class UserContext : DbContext
     {
         public UserContext(DbContextOptions<UserContext> options) : base(options)
-        {
+        {   
 
         }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<User> User { get; set; }   
     }
 }
