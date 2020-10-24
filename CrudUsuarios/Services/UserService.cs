@@ -74,24 +74,27 @@ namespace CrudUsuarios.Services
 
         public User Update(UserViewModel userViewModel, int id)
         {
-            try {
-                var foundedUser = _context.User.Where(user => user.Id == id).FirstOrDefault();
-                if (foundedUser != null)
+            var foundedUser = _context.User.Where(user => user.Id == id).FirstOrDefault();
+            if (foundedUser != null)
+            {
+                foundedUser.Name = userViewModel.Name;
+                foundedUser.LastName = userViewModel.LastName;
+                foundedUser.Email = userViewModel.Email;
+                foundedUser.Birthday = userViewModel.Birthday;
+                foundedUser.Graduation = userViewModel.Graduation;
+                var resp = _context.SaveChanges();
+                if (resp == 1)
                 {
-                    foundedUser.Name = userViewModel.Name;
-                    foundedUser.LastName = userViewModel.LastName;
-                    foundedUser.Email = userViewModel.Email;
-                    foundedUser.Birthday = userViewModel.Birthday;
-                    foundedUser.Graduation = userViewModel.Graduation;
-                    _context.SaveChanges();
                     return foundedUser;
                 }
                 else
                 {
-                    throw new Exception("Usuário não encontrado");
+                    throw new Exception("Ocorreu um erro desconhecido ao alterar o usuário");
                 }
-            } catch (Exception ex) {
-                throw ex;
+            }
+            else
+            {
+                throw new Exception("Usuário não encontrado");
             }
         }
     }
