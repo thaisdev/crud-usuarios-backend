@@ -4,14 +4,16 @@ using CrudUsuarios.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CrudUsuarios.Migrations
 {
     [DbContext(typeof(CrudUserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20201023231314_GraduationField")]
+    partial class GraduationField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

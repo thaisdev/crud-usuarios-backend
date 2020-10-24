@@ -1,6 +1,7 @@
 ﻿using CrudUsuarios.Context;
 using CrudUsuarios.Models;
 using CrudUsuarios.Services.Interfaces;
+using CrudUsuarios.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,16 @@ namespace CrudUsuarios.Services
             _context = context;
         }
 
-        public User Create(User user)
+        public User Create(UserViewModel userViewModel)
         {
+            User user = new User()
+            {
+                Name = userViewModel.Name,
+                LastName = userViewModel.LastName,
+                Email = userViewModel.Email,
+                Birthday = userViewModel.Birthday,
+                Graduation = userViewModel.Graduation
+            };
             _context.User.Add(user);
             var resp = _context.SaveChanges();
             if (resp == 1)
@@ -63,27 +72,26 @@ namespace CrudUsuarios.Services
             return _context.User.Where(user => user.Id == id).FirstOrDefault();
         }
 
-        public User Update(User user, int id)
+        public User Update(UserViewModel userViewModel, int id)
         {
-            var foundedUser = _context.User.Where(user => user.Id == id).FirstOrDefault();
-            if (foundedUser != null)
-            {
-                foundedUser.Name = user.Name;
-                foundedUser.LastName = user.LastName;
-                foundedUser.Birthday = user.Birthday;
-                foundedUser.Escolaridade = user.Escolaridade;
-                var resp = _context.SaveChanges();
-                if (resp == 1)
+            try {
+                var foundedUser = _context.User.Where(user => user.Id == id).FirstOrDefault();
+                if (foundedUser != null)
                 {
-                    return user;
+                    foundedUser.Name = userViewModel.Name;
+                    foundedUser.LastName = userViewModel.LastName;
+                    foundedUser.Email = userViewModel.Email;
+                    foundedUser.Birthday = userViewModel.Birthday;
+                    foundedUser.Graduation = userViewModel.Graduation;
+                    _context.SaveChanges();
+                    return foundedUser;
                 }
                 else
                 {
-                    throw new Exception("Ocorreu um erro desconhecido ao alterar o usuário");
+                    throw new Exception("Usuário não encontrado");
                 }
-            } else
-            {
-                throw new Exception("Usuário não encontrado");
+            } catch (Exception ex) {
+                throw ex;
             }
         }
     }

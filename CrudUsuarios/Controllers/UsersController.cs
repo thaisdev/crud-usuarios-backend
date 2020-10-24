@@ -10,6 +10,7 @@ using CrudUsuarios.Models;
 using CrudUsuarios.Services;
 using System.Net;
 using CrudUsuarios.Services.Interfaces;
+using CrudUsuarios.ViewModel;
 
 namespace CrudUsuarios.Controllers
 {
@@ -33,7 +34,7 @@ namespace CrudUsuarios.Controllers
             try
             {
                var resp = _service.FindAll();
-               return Ok(new  { data = resp });
+               return Ok(resp);
             }
             catch (Exception ex)
             {
@@ -64,11 +65,11 @@ namespace CrudUsuarios.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, UserViewModel userViewModel)
         {
             try
             {
-                var resp = _service.Update(user, id);
+                var resp = _service.Update(userViewModel, id);
                 return Ok(resp);
             }
             catch (Exception ex)
@@ -79,11 +80,11 @@ namespace CrudUsuarios.Controllers
 
         // POST: api/Users
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(UserViewModel userViewModel)
         {
             try
             {
-                var resp = _service.Create(user);
+                var resp = _service.Create(userViewModel);
                 return StatusCode((int)HttpStatusCode.Created, resp);
             }
             catch (Exception ex)

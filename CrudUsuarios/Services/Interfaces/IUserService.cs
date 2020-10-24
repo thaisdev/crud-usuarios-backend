@@ -1,4 +1,5 @@
 ﻿using CrudUsuarios.Models;
+using CrudUsuarios.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace CrudUsuarios.Services.Interfaces
 {
     public interface IUserService
     {
-        User Create(User user);
+        User Create(UserViewModel userViewModel);
         User FindById(int id);
         List<User> FindAll();
-        User Update(User user, int id);
+        User Update(UserViewModel userViewModel, int id);
         bool Delete(int id);
     }
 }
